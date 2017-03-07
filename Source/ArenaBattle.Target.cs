@@ -20,6 +20,6 @@ public class ArenaBattleTarget : TargetRules
 		ref List<string> OutExtraModuleNames
 		)
 	{
-		OutExtraModuleNames.AddRange( new string[] { "ArenaBattle" } );
+		OutExtraModuleNames.AddRange( new string[] { "ArenaBattle", "WebService" } );
 	}
 }
