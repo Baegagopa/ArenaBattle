@@ -3,14 +3,15 @@
 #include "ArenaBattle.h"
 #include "ABGameInstance.h"
 
-
+// 에디터 컴파일시
 UABGameInstance::UABGameInstance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ABGameInstance constructor!"));
 
-	WebConnect = CreateDefaultSubobject<UWebConnect>(TEXT("WebConnect"));
+	WebConnect = CreateDefaultSubobject<UWebConnect>(TEXT("WebConnect")); // CreateDefaultSubobject는 생성자에서만 쓸 수 있다. CDO
 }
 
+// 런타임에 가장 먼저 로딩
 void UABGameInstance::Init()
 {
 	AB_LOG_CALLONLY(Warning)
@@ -46,4 +47,26 @@ void UABGameInstance::Init()
 			WebConnect->ProcessEvent(Func1, NULL);
 		}
 	}
+
+	WebConnect3 = NewObject<UWebConnect>(this);
+	AB_LOG(Warning, TEXT("Outer of NewObject : %s"), *WebConnect3->GetOuter()->GetClass()->GetFullName());
+
+	UWorld* CurrentWorld = GetWorld();
+	for (const auto& Entry : FActorRange(CurrentWorld))
+	{
+		AB_LOG(Warning, TEXT("Actor : %s"), *Entry->GetName());
+		TArray<UObject* > Components;
+		Entry->GetDefaultSubobjects(Components);
+		for (const auto& CEntry : Components)
+		{
+			AB_LOG(Warning, TEXT(" -- Component : %s"), *CEntry->GetName());
+		}
+	}
+
+	for (TActorIterator<AStaticMeshActor> It(CurrentWorld); It; ++It)
+	{
+		AB_LOG(Warning, TEXT("StaticMesh Actor : %s"), *It->GetName());
+	}
+
+
 }
