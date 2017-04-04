@@ -12,7 +12,7 @@ AABWeapon::AABWeapon()
 	Weapon = CreateDefaultSubobject < USkeletalMeshComponent> (TEXT("WeaponHash"));
 	RootComponent = Weapon;
 
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_Weapon(TEXT("SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_Weapon(TEXT("SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Dual_Blade/Dual_Blade_WrappedDeath/SK_Dual_Blade_WrappedDeath.SK_Dual_Blade_WrappedDeath'"));
 	Weapon->SetSkeletalMesh(SK_Weapon.Object);
 }
 
@@ -27,6 +27,4 @@ void AABWeapon::BeginPlay()
 void AABWeapon::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-
 }
-
