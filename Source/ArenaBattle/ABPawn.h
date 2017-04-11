@@ -5,7 +5,7 @@
 #include "GameFramework/Pawn.h"
 #include "ABPawn.generated.h"
 
-UCLASS()
+UCLASS(config = Game)
 class ARENABATTLE_API AABPawn : public APawn
 {
 	GENERATED_BODY()
@@ -36,6 +36,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnyWhere, Category = "Camera")
 	class UCameraComponent* Camera;
 
-	
+	UPROPERTY(config, BlueprintReadWrite, EditAnywhere, Category = "Stat")
+	float MaxHP;
+
+	UPROPERTY(BlueprintReadWrite, EditInstanceOnly, Category = "Stat")
+	float CurrentHP;
+
+public:
+	UPROPERTY(config, BlueprintReadOnly, VisibleInstanceOnly, Category ="Asset")
+	TArray<FStringAssetReference> CharacterAssets;
 	
 };
