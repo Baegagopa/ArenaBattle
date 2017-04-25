@@ -36,6 +36,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnyWhere, Category = "Camera")
 	class UCameraComponent* Camera;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnyWhere, Category = "Camera")
+	class USpringArmComponent* SpringArm;
+
 	UPROPERTY(config, BlueprintReadWrite, EditAnywhere, Category = "Stat")
 	float MaxHP;
 
@@ -45,5 +48,14 @@ public:
 public:
 	UPROPERTY(config, BlueprintReadOnly, VisibleInstanceOnly, Category ="Asset")
 	TArray<FStringAssetReference> CharacterAssets;
+
+	float CurrentLeftRightVal;
+	float CurrentUpDownVal;
+
+	UFUNCTION()
+	void UpDownInput(float NewInputVal);
+
+	UFUNCTION()
+	void LeftRightInput(float NewInputval);
 	
 };
