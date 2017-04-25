@@ -12,6 +12,7 @@ public:
 	TSharedPtr<FHouse> OthersDeed;
 	TWeakPtr<FHouse> AccessHouse;
 	int32 Size = 10;
+	void RequestTokenComplete(const FString& Token) { AB_LOG( Warning, TEXT("Test...")); }
 };
 
 /**
@@ -28,7 +29,7 @@ public :
 	UPROPERTY()
 	class UWebConnect* WebConnect;
 
-	//UPROPERTY()
+	UPROPERTY()
 	class UWebConnect* WebConnect2;
 
 	UPROPERTY()
@@ -42,4 +43,10 @@ public :
 
 	UFUNCTION()
 	void CheckUObjectAlive();
+
+	UFUNCTION()
+	void RequestTokenComplete(const FString& Token);
+
+	UFUNCTION()
+	void RequestTokenComplete2(const FString& Token);
 };

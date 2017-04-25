@@ -16,6 +16,15 @@ void UABGameInstance::Init()
 {
 	AB_LOG_CALLONLY(Warning)
 	Super::Init();
+
+	FHouse* HouseNew = new FHouse();
+
+	WebConnect->TokenCompleteDelegate.AddUObject(this, &UABGameInstance::RequestTokenComplete);
+	WebConnect->TokenCompleteDelegate.AddUObject(this, &UABGameInstance::RequestTokenComplete2);
+	WebConnect->TokenCompleteDelegate.AddRaw(HouseNew, &FHouse::RequestTokenComplete);
+
+	WebConnect->RequestToken(TEXT("destiny"));
+
 	/*
 	UE_LOG(LogClass, Warning, TEXT("GameInstance Init!"));
 
@@ -70,6 +79,7 @@ void UABGameInstance::Init()
 	}
 	*/
 
+	#pragma region 포인터 실습
 	// 1단계
 	AB_LOG(Warning, TEXT("****** 1단계 ******"));
 	FHouse* NewHouseAddress = new FHouse();
@@ -199,8 +209,20 @@ void UABGameInstance::Init()
 	WebConnect2->ConditionalBeginDestroy();
 	//GetWorld()->ForceGarbageCollection(true);
 	GetWorld()->GetTimerManager().SetTimer(ObjectCheckTimer, this, &UABGameInstance::CheckUObjectAlive, 1.0f, true);
-
+	#pragma endregion
 }
+
+
+void UABGameInstance::RequestTokenComplete(const FString& Token)
+{
+	AB_LOG(Warning, TEXT("Token : %s"), *Token);
+}
+
+void UABGameInstance::RequestTokenComplete2(const FString& Token)
+{
+	AB_LOG(Warning, TEXT("Token : %s"), *Token);
+}
+
 
 void UABGameInstance::CheckUObjectAlive()
 {
