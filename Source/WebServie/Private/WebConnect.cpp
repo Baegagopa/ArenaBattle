@@ -3,6 +3,11 @@
 #include "WebService.h"
 #include "WebConnect.h"
 
+// 1. 델리게이트 타입
+// 2. 델리게이트 종류 : 일반, MULTICAST
+// 3. 바인딩 api      : BindUObject, BindRaw
+//                      AddUObject, AddRaw
+// 4. 호출 API        : ExecuteIfBound , Broadcast
 
 UWebConnect::UWebConnect()
 {

@@ -26,7 +26,7 @@ public :
 	UABGameInstance();
 	virtual void Init() override;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "WebService")
 	class UWebConnect* WebConnect;
 
 	UPROPERTY()
@@ -49,4 +49,7 @@ public :
 
 	UFUNCTION()
 	void RequestTokenComplete2(const FString& Token);
+
+
+
 };
