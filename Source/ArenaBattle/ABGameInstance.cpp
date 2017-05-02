@@ -17,14 +17,73 @@ void UABGameInstance::Init()
 	AB_LOG_CALLONLY(Warning)
 	Super::Init();
 
+
+	// UWebConnect를 uasset파일로 저장
+	FString PackageName = TEXT("/Temp/SavedWebConnection");
+	UPackage* NewPackage = CreatePackage(nullptr, *PackageName);
+	WebConnect2= NewObject<UWebConnect>(NewPackage);
+	FString PackageFileName = FPackageName::LongPackageNameToFilename(PackageName, FPackageName::GetAssetPackageExtension());
+
+	WebConnect2->Host = TEXT("127.0.0.7");
+	WebConnect2->URI = TEXT("/");
+	if (UPackage::SavePackage(NewPackage, WebConnect2, RF_Standalone, *PackageFileName))
+	{
+		UPackage* SavedPackage = ::LoadPackage(NULL, *PackageFileName, LOAD_None);
+		TArray<UObject *> ObjectsInPackage;
+		GetObjectsWithOuter(SavedPackage, ObjectsInPackage, false);
+		for (const auto& EachObject : ObjectsInPackage)
+		{
+			UWebConnect* WebConnectionFromFile = Cast<UWebConnect>(EachObject);
+			if (WebConnectionFromFile)
+			{
+				AB_LOG(Warning, TEXT("WebConnection From File : Host %s , URI %s"), *WebConnectionFromFile->Host, *WebConnectionFromFile->URI);
+			}
+		}
+	}
+
+
+
+	// 시리얼라이제이션
+	/*
+	WebConnect2 = NewObject<UWebConnect>(this);
+	WebConnect2->Host = TEXT("127.0.0.7");
+	WebConnect2->URI = TEXT("/");
+	AB_LOG(Warning, TEXT("Outer Class Name : %s"), *WebConnect2->GetOuter()->GetClass()->GetName());
+	AB_LOG(Warning, TEXT("Outermost Class Name : %s"), *WebConnect2->GetOutermost()->GetClass()->GetName());
+
+	FString FullPath = FString::Printf(TEXT("%s%s"), *FPaths::GameSavedDir(), TEXT("WebConnection.txt"));
+	FArchive* ArWriter = IFileManager::Get().CreateFileWriter(*FullPath);
+	if (ArWriter)
+	{
+		*ArWriter << *WebConnect2;
+
+		ArWriter->Close();
+		delete ArWriter;
+		ArWriter = NULL;
+	}
+
+	TSharedPtr<FArchive> FileReader = MakeShareable(IFileManager::Get().CreateFileReader(*FullPath));
+	if (FileReader.IsValid())
+	{
+		UWebConnect* WebConnectionFromFile = NewObject<UWebConnect>(this);
+		*FileReader.Get() << *WebConnectionFromFile;
+		FileReader->Close();
+		AB_LOG(Warning, TEXT("WebConnect From File : Host %s , URI %s"), *WebConnectionFromFile->Host, *WebConnectionFromFile->URI);
+	}
+	*/
+
+	// 델리게이트
+	/*
 	FHouse* HouseNew = new FHouse();
 
-	WebConnect->TokenCompleteDelegate.AddUObject(this, &UABGameInstance::RequestTokenComplete);
-	WebConnect->TokenCompleteDelegate.AddUObject(this, &UABGameInstance::RequestTokenComplete2);
-	WebConnect->TokenCompleteDelegate.AddRaw(HouseNew, &FHouse::RequestTokenComplete);
+	WebConnect->TokenCompleteDelegate.AddDynamic(this, &UABGameInstance::RequestTokenComplete);
+	WebConnect->TokenCompleteDelegate.AddDynamic(this, &UABGameInstance::RequestTokenComplete2);
+	//WebConnect->TokenCompleteDelegate.AddRaw(HouseNew, &FHouse::RequestTokenComplete);
 
 	WebConnect->RequestToken(TEXT("destiny"));
+	*/
 
+	// 기타
 	/*
 	UE_LOG(LogClass, Warning, TEXT("GameInstance Init!"));
 
@@ -80,6 +139,7 @@ void UABGameInstance::Init()
 	*/
 
 	#pragma region 포인터 실습
+	/*
 	// 1단계
 	AB_LOG(Warning, TEXT("****** 1단계 ******"));
 	FHouse* NewHouseAddress = new FHouse();
@@ -205,10 +265,11 @@ void UABGameInstance::Init()
 	AB_LOG(Warning, TEXT("****** 6단계 ******"));
 	WebConnect2 = NewObject<UWebConnect>();
 	WebConnect2->Host = TEXT("127.0.0.1");
-	//WebConnectionNew->AddToRoot();
+	//WebConnect2->AddToRoot();
 	WebConnect2->ConditionalBeginDestroy();
 	//GetWorld()->ForceGarbageCollection(true);
 	GetWorld()->GetTimerManager().SetTimer(ObjectCheckTimer, this, &UABGameInstance::CheckUObjectAlive, 1.0f, true);
+	*/
 	#pragma endregion
 }
 
