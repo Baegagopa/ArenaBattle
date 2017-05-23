@@ -41,6 +41,7 @@ AABPawn::AABPawn()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_Mesh(TEXT("SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Bladed.SK_CharM_Bladed'"));
 	Mesh->SetSkeletalMesh(SK_Mesh.Object);
 	MaxHP = 100.0f;
+	CurrentState = EPlayerState::PEACE;
 
 	this->AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -71,12 +72,23 @@ void AABPawn::Tick( float DeltaTime )
 
 	FVector InputVector = FVector(CurrentUpDownVal, CurrentLeftRightVal, 0.0F);
 
-	if (InputVector.SizeSquared() > 0.0F)
+	switch (CurrentState)
 	{
-		FRotator TargetRotation = UKismetMathLibrary::MakeRotFromX(InputVector);
-		SetActorRotation(TargetRotation);
-		AddMovementInput(GetActorForwardVector());
+		case EPlayerState::PEACE:
+		{
+			if (InputVector.SizeSquared() > 0.0F)
+			{
+				FRotator TargetRotation = UKismetMathLibrary::MakeRotFromX(InputVector);
+				SetActorRotation(TargetRotation);
+				AddMovementInput(GetActorForwardVector());
+			}
+			break;
+		}
+		case EPlayerState::BATTLE:
+			break;
 	}
+
+	
 }
 
 // Called to bind functionality to input
@@ -86,7 +98,14 @@ void AABPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 	InputComponent->BindAxis("LeftRight", this, &AABPawn::LeftRightInput);
 	InputComponent->BindAxis("UpDown", this, &AABPawn::UpDownInput);
+	InputComponent->BindAction("NormalAttack", EInputEvent::IE_Pressed, this,
+		&AABPawn::OnPressNormalAttack);
+}
 
+void AABPawn::OnPressNormalAttack()
+{
+	//AB_LOG_CALLONLY(Warning);
+	CurrentState = EPlayerState::BATTLE;
 }
 
 void AABPawn::LeftRightInput(float NewInputVal)
